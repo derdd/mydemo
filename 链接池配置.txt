@@ -1,0 +1,84 @@
+
+#loadbalanced timeout setting
+spring.http-request-factory.read-timeout=60000
+spring.http-request-factory.connect-timeout=10000
+spring.http-request-factory.connection-request-timeout=2000
+spring.http-client.max-total=1000
+spring.http-client.default-max-per-route=500
+
+
+##当客户端闲置多长时间后关闭连接，如果指定为0，表示关闭该功能，单位毫秒
+redis.timeout=2000
+
+#控制一个pool可分配多少个jedis实例,默认8
+redis.maxTotal=2000
+
+#最大空闲数,默认8
+redis.maxIdle=200
+
+#最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。默认-1
+redis.maxWaitMillis=300000
+
+#是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个, 默认false
+redis.testOnBorrow=true
+
+#在空闲时检查有效性, 默认false
+redis.TestOnReturn=true
+
+
+适合的maxTotal
+其实这个参数是比较难确定的，举个例子：
+
+命令平均执行时间0.1ms = 0.001s
+业务需要50000 QPS
+maxTotal理论值 = 0.001 * 50000 = 50个。实际值要偏大一些
+
+建议maxIdle = maxTotal
+
+maxWaitMillis不建议使用默认值
+
+
+bonecp0.maxConnectionsPerPartition=25
+bonecp0.minConnectionsPerPartition=5
+bonecp0.partitionCount=4
+bonecp0.idleMaxAge=4
+bonecp0.acquireIncrement=10
+bonecp0.poolAvailabilityThreshold=100
+bonecp0.connectionTimeoutInMs=1000
+bonecp0.idleConnectionTestPeriod=1
+
+#
+bonecp0.maxConnectionsPerPartition=1500
+bonecp0.minConnectionsPerPartition=10
+bonecp0.partitionCount=8
+bonecp0.idleMaxAge=4
+bonecp0.acquireIncrement=5
+bonecp0.poolAvailabilityThreshold=2
+bonecp0.connectionTimeoutInMs=5
+bonecp0.idleConnectionTestPeriod=1 
+
+
+
+#设置每个分区含有connection最大个数。这个参数默认为2,小于1设置为20
+bonecp0.maxConnectionsPerPartition
+
+设置每个分区含有connection最大小个数。这个参数默认为1,小于0设置为1
+bonecp0.minConnectionsPerPartition
+
+#设置分区个数。这个参数默认为1，建议3-4，,小于1设置为1
+bonecp0.partitionCount
+
+#设置connection的空闲存活时间。这个参数默认为60，单位：分钟。设置为0该功能失效。
+bonecp0.idleMaxAge
+
+#设置分区中的connection增长数量。这个参数默认为1。
+bonecp0.acquireIncrement
+
+#设置连接池阀值。这个参数默认为0。如果小于0或是大于100，BoneCP将设置为20。
+bonecp0.poolAvailabilityThreshold 
+
+#设置获取connection超时的时间。这个参数默认为0; 单位：毫秒。
+bonecp0.connectionTimeoutInMs
+
+#设置测试connection的间隔时间。这个参数默认为240，单位：分钟。设置为0该功能失效。
+bonecp0.idleConnectionTestPeriod
